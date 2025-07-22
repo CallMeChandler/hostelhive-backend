@@ -1,14 +1,14 @@
 import User from "../models/userModel.js";
 
 export const getMyProfile = async (req, res, next) => {
-    try {
-        const user = await User.findById(req.user.id).select("-password");
-        if (!user) return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-        res.json(user);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 }
 
 export const getAllUsers = async (req, res) => {
@@ -16,6 +16,25 @@ export const getAllUsers = async (req, res) => {
     const users = await User.find().select("-password");
     res.json(users);
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const updateUserRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+    const { id } = req.params;
+
+    if (!["student", "admin", "secretary"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role." });
+    }
+
+    const user = await User.findByIdAndUpdate(id, { role }, { new: true });
+
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    res.status(200).json({ message: "Role updated!", user });
+  } catch (error) {
     res.status(500).json({ message: err.message });
   }
 };

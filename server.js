@@ -20,7 +20,7 @@ connectDB();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/protected", testRoutes);
-app.use('/api/users', (req, res) => res.send('User route'));
+app.use("/api/users", userRoutes);
 
 app.use((err, req, res, next) => {
     res.status(500).json({ message: err.message });

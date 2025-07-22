@@ -3,7 +3,8 @@ import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 import {
   getMyProfile,
   getAllUsers,
-  deleteUserById
+  deleteUserById,
+  updateUserRole
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -12,9 +13,11 @@ const router = express.Router();
 router.get("/me", verifyToken, getMyProfile);
 
 // Admin: get all users
-router.get("/", verifyToken, authorizeRoles("admin", "secretary"), getAllUsers);
+router.get("/all", verifyToken, authorizeRoles("admin"), getAllUsers);
 
 // Admin: delete user
 router.delete("/:id", verifyToken, authorizeRoles("admin"), deleteUserById);
+
+router.put("/role/:id", verifyToken, authorizeRoles("admin"), updateUserRole);
 
 export default router;
