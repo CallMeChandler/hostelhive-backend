@@ -47,3 +47,20 @@ export const deleteUserById = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // from verifyToken middleware
+    const { branch, profileImage } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { branch, profileImage },
+      { new: true }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+};

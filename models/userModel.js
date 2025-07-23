@@ -25,6 +25,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  branch: { type: String },
+  profileImage: { type: String },
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);

@@ -4,7 +4,8 @@ import {
   getMyProfile,
   getAllUsers,
   deleteUserById,
-  updateUserRole
+  updateUserRole,
+  updateProfile
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -19,5 +20,7 @@ router.get("/all", verifyToken, authorizeRoles("admin"), getAllUsers);
 router.delete("/:id", verifyToken, authorizeRoles("admin"), deleteUserById);
 
 router.put("/role/:id", verifyToken, authorizeRoles("admin"), updateUserRole);
+
+router.patch("/profile", verifyToken, updateProfile);
 
 export default router;
