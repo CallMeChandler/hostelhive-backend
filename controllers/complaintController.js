@@ -2,14 +2,15 @@ import { Complaint } from "../models/complaintModel.js";
 
 export const createComplaint = async (req, res) => {
     try {
-        const { type, description } = req.body;
+        const { title, type, description, room } = req.body;
         const user = req.user;
 
         const complaint = await Complaint.create({
             userId: user.id,
             email: user.email,
             hostel: user.hostel,
-            room: user.room,
+            room,
+            title,
             type,
             description,
         });
