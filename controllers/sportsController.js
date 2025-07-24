@@ -1,49 +1,73 @@
 import { SportItem } from "../models/sportsItemModel.js";
 import { SportsRequest } from "../models/sportsReqModel.js";
 
+
 export const getAllItems = async (req, res) => {
-    const items = await SportItem.find();
-    res.json(items);
+    try {
+        const hostel = req.user.hostel;
+        const items = await SportItem.find({ hostel });
+        res.json(items);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
+
 
 export const createRequest = async (req, res) => {
-    const { item } = req.body;
-    const user = req.user;
+    try {
+        const { item } = req.body;
+        const user = req.user;
 
-    const request = new SportsRequest({
-        userId: user.id,
-        name: user.name,
-        email: user.email,
-        item,
-        quantity: 1,
-    });
+        const request = new SportsRequest({
+            userId: user.id,
+            name: user.name,
+            email: user.email,
+            item,
+            quantity: 1,
+            hostel: user.hostel,
+        });
 
-    await request.save();
-    res.status(201).json({ message: "Request Submitted", request });
+
+        await request.save();
+        res.status(201).json({ message: "Request Submitted", request });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
+
 
 export const getAllRequests = async (req, res) => {
-    const requests = await SportsRequest.find().sort({ date: -1 });
-    res.json(requests);
+    try {
+        const hostel = req.user.hostel;
+        const requests = await SportsRequest.find({ hostel }).sort({ date: -1 });
+        res.json(requests);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
+
+
 export const updateRequestStatus = async (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body;
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
 
-    const request = await SportsRequest.findById(id);
-    if (!request) return res.status(404).json({ message: "Request not found" });
+        const request = await SportsRequest.findById(id);
+        if (!request) return res.status(404).json({ message: "Request not found" });
 
-    request.status = status;
-    await request.save();
+        request.status = status;
+        await request.save();
 
-    
-    if (status === "approved") {
-        await SportItem.findOneAndUpdate(
-            { item: request.item },
-            { $inc: { qty: 1 } }
-        );
+        if (status === "approved") {
+            await SportItem.findOneAndUpdate(
+                { item: request.item, hostel: request.hostel },
+                { $inc: { qty: -1 } }
+            );
+        }
+
+        res.json({ message: "Status updated", request });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
-
-    res.json({ message: "Status updated", request });
 };

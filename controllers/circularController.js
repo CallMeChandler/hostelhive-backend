@@ -16,6 +16,7 @@ export const createCircular = async (req, res) => {
             message: desc,
             pdf: fileUrl,
             timestamp: new Date(),
+            hostel: req.user.hostel,
         });
 
         await newCircular.save();
@@ -27,9 +28,15 @@ export const createCircular = async (req, res) => {
     }
 };
 
+
 export const getAllCirculars = async (req, res) => {
     try {
-        const circulars = await Circular.find().sort({ createdAt: -1 });
+        const isSuperAdmin = req.user.role === "superadmin";
+
+        const circulars = isSuperAdmin
+            ? await Circular.find().sort({ createdAt: -1 })
+            : await Circular.find({ hostel: req.user.hostel }).sort({ createdAt: -1 });
+
         res.json(circulars);
     } catch (err) {
         res.status(500).json({ message: "Error fetching circulars" });

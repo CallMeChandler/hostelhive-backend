@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const sportItemSchema = new mongoose.Schema({
   item: { type: String, required: true, unique: true },
+  hostel: String,
   qty: { type: Number, default: 0 }
 });
 

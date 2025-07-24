@@ -51,6 +51,7 @@ export const loginUser = async (req, res) => {
             {
                 id: user._id,
                 email: user.email,
+                hostel: user.hostel,
                 role: user.role
             },
             JWT_SECRET,

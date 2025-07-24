@@ -8,6 +8,7 @@ const dayMealSchema = new mongoose.Schema({
 });
 
 const messMenuSchema = new mongoose.Schema({
+  hostel: { type: String, required: true },
   week: {
     monday: dayMealSchema,
     tuesday: dayMealSchema,

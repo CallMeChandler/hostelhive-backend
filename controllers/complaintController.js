@@ -23,12 +23,14 @@ export const createComplaint = async (req, res) => {
 
 export const getAllComplaints = async (req, res) => {
     try {
-        const complaints = await Complaint.find().sort({ createdAt: -1 });
+        const hostel = req.user.hostel; // 👈 decode from JWT
+        const complaints = await Complaint.find({ hostel }).sort({ createdAt: -1 });
         res.json(complaints);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
+
 
 export const getMyComplaints = async (req, res) => {
     try {

@@ -13,12 +13,22 @@ export const getMyProfile = async (req, res, next) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const user = req.user;
+
+    // Superadmin condition – tweak as needed
+    const isSuperAdmin =
+      user.role === "admin" && user.email === "btech11021.24@bitmesra.ac.in";
+
+    const users = isSuperAdmin
+      ? await User.find().select("-password")
+      : await User.find({ hostel: user.hostel }).select("-password");
+
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 export const updateUserRole = async (req, res) => {
   try {
@@ -50,17 +60,16 @@ export const deleteUserById = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const userId = req.user.id; // from verifyToken middleware
-    const { branch, profileImage } = req.body;
+    const userId = req.user.id;
+    const updates = req.body;
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { branch, profileImage },
-      { new: true }
-    );
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+    }).select("-password");
 
     res.status(200).json(updatedUser);
   } catch (err) {
+    console.error("Update Profile Error:", err);
     res.status(500).json({ message: "Failed to update profile" });
   }
 };

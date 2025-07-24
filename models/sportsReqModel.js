@@ -4,6 +4,7 @@ const sportsRequestSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   name: String,
   email: String,
+  hostel: String,
   item: String,
   quantity: { type: Number, default: 1 },
   date: { type: Date, default: Date.now },
