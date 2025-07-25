@@ -4,7 +4,7 @@ import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getMenu);
+router.get("/", verifyToken, getMenu);
 router.put("/", verifyToken, authorizeRoles("admin", "secretary"), saveMenu);
 router.put("/edit", verifyToken, authorizeRoles("admin", "secretary"), updateMessMenu);
 

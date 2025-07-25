@@ -5,12 +5,21 @@ import { SportsRequest } from "../models/sportsReqModel.js";
 export const getAllItems = async (req, res) => {
     try {
         const hostel = req.user.hostel;
-        const items = await SportItem.find({ hostel });
+
+        
+        let items = await SportItem.find({ hostel });
+
+        
+        if (items.length === 0) {
+            items = await SportItem.find({ hostel: { $exists: false } });
+        }
+
         res.json(items);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
+
 
 
 export const createRequest = async (req, res) => {
