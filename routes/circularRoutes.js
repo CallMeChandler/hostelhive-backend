@@ -18,7 +18,7 @@ const upload = multer({ storage });
 router.post(
     "/",
     verifyToken,
-    authorizeRoles("admin", "secretary"),
+    authorizeRoles("admin", "mess-secretary", "maintenance-secretary", "sports-secretary"),
     upload.single("file"), // ✅ multer middleware
     createCircular
 );

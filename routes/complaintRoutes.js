@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/", verifyToken, createComplaint);
 router.get("/my", verifyToken, getMyComplaints);
-router.get("/all", verifyToken, authorizeRoles("admin", "secretary"), getAllComplaints);
-router.put("/:id/status", verifyToken, authorizeRoles("admin", "secretary"), updateComplaintStatus);
+router.get("/all", verifyToken, authorizeRoles("admin", "mess-secretary", "sports-secretary", "maintenance-secretary"), getAllComplaints);
+router.put("/:id/status", verifyToken, authorizeRoles("admin", "mess-secretary", "sports-secretary", "maintenance-secretary"), updateComplaintStatus);
 
 export default router;

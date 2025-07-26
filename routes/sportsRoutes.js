@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/stock", verifyToken, getAllItems);
 router.post("/request", verifyToken, createRequest);
-router.get("/requests", verifyToken, authorizeRoles("admin", "secretary"), getAllRequests);
-router.put("/request/:id", verifyToken, authorizeRoles("admin", "secretary"), updateRequestStatus);
+router.get("/requests", verifyToken, authorizeRoles("admin", "sports-secretary"), getAllRequests);
+router.put("/request/:id", verifyToken, authorizeRoles("admin", "sports-secretary"), updateRequestStatus);
 
 export default router;
